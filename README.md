@@ -14,14 +14,14 @@ Request to generate and get access and refresh tokens.
 ##### Example Input:
 ```
 {
-	"id": "64e6690b209ea12434cc3ba2",
+    "id": "64e6690b209ea12434cc3ba2",
 } 
 ```
 
 ##### Example Response 1:
 ```
 {
-	"status": "OK",
+    "status": "OK",
     "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTI4MjI2NjUsImlhdCI6MTY5MjgyMTc2NSwidXNlcl9pZCI6IjY0ZTY2OGNhMjA5ZWExMjQzNGNjM2JhMSJ9.F8ufLqZ4jtR9MP1XxEITtwpuuM_JK4Puu5-2ROn0mx_eP_Xt5w1LvE0MEMlyaouwLPl9vM1d8sRH7EslASxFhA",
     "refresh_token": "REJIb3pOWkxRbHRRQkpLb2xiQmFyQmlMUENqdmlUa1Q="
 } 
@@ -43,8 +43,8 @@ Request to refresh couple of access and refresh tokens.
 ##### Example Input:
 ```
 {
-	"id": "64e6690b209ea12434cc3ba2",
-	"refresh_token": "REJIb3pOWkxRbHRRQkpLb2xiQmFyQmlMUENqdmlUa1Q="
+    "id": "64e6690b209ea12434cc3ba2",
+    "refresh_token": "REJIb3pOWkxRbHRRQkpLb2xiQmFyQmlMUENqdmlUa1Q="
 } 
 ```
 
