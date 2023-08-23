@@ -65,6 +65,10 @@ Request to refresh couple of access and refresh tokens.
 } 
 ```
 
+## Mongo Document User
+![alt text](example_user.bmp)
+
+
 ## Run Project
 
 Use ```make start``` to build project in a binary file and run it
