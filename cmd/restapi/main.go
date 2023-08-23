@@ -27,8 +27,6 @@ func main() {
 
 	cfg := config.Load(configPath)
 
-	//fmt.Println(cfg)
-
 	logger := configureLogger(cfg.Env)
 
 	mongoDB, err := mongo.New(cfg.DatabaseUrl, cfg.DatabaseName)
@@ -46,16 +44,6 @@ func main() {
 	http.HandleFunc("/auth/sign-in", authHandleFunc)
 	http.HandleFunc("/auth/refresh", refreshHandleFunc)
 
-	//u, err := authService.UserExist("64e635c2209ea12434cc3b9f")
-	//if err == nil {
-	//	//t, _ := authService.GenerateJWT(u)
-	//	t, err := authService.RefreshJWT("anRCR0RiRGxZYllUaE9mRGR1WXhORG5lR2pVTmtCanI=", u)
-	//	if err != nil {
-	//		fmt.Println(err.Error())
-	//	}
-	//	logger.Info("access token - " + t["access_token"])
-	//	logger.Info("refresh token - " + t["refresh_token"])
-	//}
 	logger.Info("server started successfully!", zap.String("env", cfg.Env))
 
 	srv := &http.Server{
@@ -74,7 +62,6 @@ func main() {
 
 func configureLogger(env string) *zap.Logger {
 	var logger *zap.Logger
-	//defer logger.Sync()
 
 	switch env {
 	case envLocal:
