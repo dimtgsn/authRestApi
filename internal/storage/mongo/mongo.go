@@ -10,10 +10,10 @@ type Storage struct {
 	DB *mongo.Database
 }
 
-func New(dbName string) (*Storage, error) {
+func New(databaseUrl, databaseName string) (*Storage, error) {
 	client, err := mongo.Connect(
 		context.TODO(),
-		options.Client().ApplyURI("mongodb://localhost:27017"),
+		options.Client().ApplyURI(databaseUrl),
 	)
 
 	if err != nil {
@@ -24,11 +24,11 @@ func New(dbName string) (*Storage, error) {
 		return nil, err
 	}
 
-	if client.Disconnect(context.TODO()) != nil {
+	db := client.Database(databaseName)
+	if db.CreateCollection(context.TODO(), "users") != nil {
 		return nil, err
 	}
-
 	return &Storage{
-		DB: client.Database(dbName),
+		DB: client.Database(databaseName),
 	}, nil
 }

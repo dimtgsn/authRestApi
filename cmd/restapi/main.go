@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/dmitry1721/authRestApi/internal/config"
+	"github.com/dmitry1721/authRestApi/internal/rest/handler"
+	"github.com/dmitry1721/authRestApi/internal/service"
 	"github.com/dmitry1721/authRestApi/internal/storage/mongo"
 	"go.uber.org/zap"
+	"net/http"
 	"os"
 )
 
@@ -25,23 +27,49 @@ func main() {
 
 	cfg := config.Load(configPath)
 
-	fmt.Println(cfg)
+	//fmt.Println(cfg)
 
 	logger := configureLogger(cfg.Env)
 
-	logger.Info("server started successfully!", zap.String("env", cfg.Env))
-	logger.Debug("debug messages are enabled")
-
-	mongoDB, err := mongo.New("users")
+	mongoDB, err := mongo.New(cfg.DatabaseUrl, cfg.DatabaseName)
 	if err != nil {
 		logger.Fatal(err.Error())
 		os.Exit(1)
 	}
-	_ = mongoDB
 
-	// TODO: init router: http
+	userStorage := mongo.NewUserStorage(mongoDB)
+	authService := service.New(userStorage, []byte(cfg.PrivateKey))
 
-	// TODO: run server
+	authHandleFunc := handler.Auth(logger, authService)
+	refreshHandleFunc := handler.Refresh(logger, authService)
+
+	http.HandleFunc("/auth/sign-in", authHandleFunc)
+	http.HandleFunc("/auth/refresh", refreshHandleFunc)
+
+	//u, err := authService.UserExist("64e635c2209ea12434cc3b9f")
+	//if err == nil {
+	//	//t, _ := authService.GenerateJWT(u)
+	//	t, err := authService.RefreshJWT("anRCR0RiRGxZYllUaE9mRGR1WXhORG5lR2pVTmtCanI=", u)
+	//	if err != nil {
+	//		fmt.Println(err.Error())
+	//	}
+	//	logger.Info("access token - " + t["access_token"])
+	//	logger.Info("refresh token - " + t["refresh_token"])
+	//}
+	logger.Info("server started successfully!", zap.String("env", cfg.Env))
+
+	srv := &http.Server{
+		Addr:         cfg.Address,
+		ReadTimeout:  cfg.HTTPServer.Timeout,
+		WriteTimeout: cfg.HTTPServer.Timeout,
+		IdleTimeout:  cfg.HTTPServer.IdleTimeout,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
+		logger.Error("failed to start server")
+	}
+
+	logger.Error("server stopped")
 }
 
 func configureLogger(env string) *zap.Logger {

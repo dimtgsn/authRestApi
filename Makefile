@@ -2,6 +2,8 @@
 build:
 	go build -v ./cmd/restapi
 
+.PHONY: build
+start: build;./restapi
 
 
 
